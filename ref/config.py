@@ -241,14 +241,20 @@ def _apply_style(cfg: Dict[str, Any]) -> None:
             flags.append(flag)
 
     def ensure_flag_pair(flag: str, value: str) -> None:
-        try:
-            idx = flags.index(flag)
-            if idx + 1 < len(flags):
-                flags[idx + 1] = value
-            else:
-                flags.extend([flag, value])
-        except ValueError:
-            flags.extend([flag, value])
+        prefix = f"{flag}="
+        for i, f in enumerate(flags):
+            if f == flag:
+                # Separate form ("--flag", "value") — update the next element
+                if i + 1 < len(flags):
+                    flags[i + 1] = value
+                else:
+                    flags.extend([flag, value])
+                return
+            if f.startswith(prefix):
+                # Combined form ("--flag=value") already set — respect it, don't override
+                return
+        # Not found in either form — add it
+        flags.extend([flag, value])
 
     ensure_flag_pair("--delimiter", " :: ")
 
