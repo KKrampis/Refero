@@ -25,6 +25,7 @@ class NormalizedItem:
     collections: Tuple[str, ...]
     tags: Tuple[str, ...]
     numChildren: int = 0  # number of child attachments/notes
+    abstract: str = ""
 
 
 @dataclass(frozen=True)
@@ -212,6 +213,7 @@ def normalize_item(item: Dict[str, Any]) -> NormalizedItem:
         collections=tuple(data.get("collections", []) or []),
         tags=tuple(tag for tag in tags if tag),
         numChildren=int(meta.get("numChildren", 0) or 0),
+        abstract=data.get("abstractNote", "") or "",
     )
 
 

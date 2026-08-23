@@ -24,20 +24,24 @@ A smarter, lighter scholarly workflow for Zotero — right from your terminal.
 
 </div>
 
-> **Fork note — attachment-indicator patch** (`hide-attachment-rows` branch)
+> **Fork note — attachment-indicator + abstract patch** (`hide-attachment-rows` branch)
 >
-> This fork patches `ref pick` so that PDF/snapshot attachment rows are hidden from the
-> interactive picker, and a 📎 column appears next to papers that have at least one attachment.
+> This fork patches `ref pick` with two improvements:
 >
-> To activate the 📎 column, open `~/.config/ref/config.yaml` and replace the
-> `fzf-header-format` line with:
+> 1. **Hides attachment/note child rows** — PDF, snapshot, and note items no longer appear
+>    as separate picker rows alongside top-level papers.
+> 2. **Attachment indicator** — a 📎 column marks papers that have at least one child attachment.
+> 3. **Abstract in preview** — the abstract is now included in the fzf preview pane and is
+>    searchable via the match format (type any abstract keyword to filter results).
+>
+> If you have an existing `~/.config/ref/config.yaml`, update these two lines to match:
 >
 > ```yaml
 > fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
+> match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
 > ```
 >
-> The only change from the upstream default is the leading `{doc[attach]}` token and a
-> title width trimmed from 70 to 68 to compensate. No other settings need to change.
+> A fresh install picks up these defaults automatically — no manual yaml edit needed.
 
 ### Overview
 
@@ -135,7 +139,7 @@ fzf-extra-bindings: [
   "alt-y:execute-silent(echo -n {5} | pbcopy)+abort"
 ]
 fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
-match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]}"
+match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
 # Default note editor mode: text | markdown
 note_editor: markdown
 # Diff display style for concurrent edits: table | inline | pairwise

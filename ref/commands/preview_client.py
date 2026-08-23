@@ -95,7 +95,10 @@ def _print_text_from_payload(payload: str) -> None:
             or str(data.get("publication") or "")
             or str(data.get("itemType") or "")
         )
+        abstract = str(data.get("abstract") or "").strip()
         line = f"{year} • {which} • {authors} • {tags_str} • {title}"
+        if abstract:
+            line += f"\n{abstract}"
         print(line)
     except Exception:
         # If anything goes wrong, just print the raw payload

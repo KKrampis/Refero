@@ -142,7 +142,7 @@ DEFAULTS: Dict[str, Any] = {
     "fzf-extra-flags": ["--ansi", "--multi", "-i", "--delimiter= :: ", "--cycle"],
     "fzf-extra-bindings": [spec.raw() for spec in DEFAULT_PICKER_BINDINGS],
     "fzf-header-format": "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}",
-    "match-format": "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]}",
+    "match-format": "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}",
     "diff_style": "inline",
     "color_scheme": "calm",
     "color_schemes": {

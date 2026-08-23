@@ -271,6 +271,7 @@ def pick(
             "year": normalized_item.year,
             "tags": list(normalized_item.tags),
             "attach": "📎" if normalized_item.numChildren else "  ",
+            "abstract": normalized_item.abstract,
         }
         if group_by_collection:
             display = build_item_collection_display(
