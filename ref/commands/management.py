@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
@@ -152,7 +153,8 @@ def open(
     html_candidate, html_url = _find_html_targets(key, item_data, children)
     item_url = _resolve_item_url(item_data)
 
-    pdf_viewer = cfg.pdf_viewer  # e.g. "zathura", None → system default
+    # REF_PDF_VIEWER env var overrides the config (useful for per-binding viewer choice)
+    pdf_viewer = os.environ.get("REF_PDF_VIEWER") or cfg.pdf_viewer
 
     def _open_path(path: str) -> None:
         if not system_open_path(path):
