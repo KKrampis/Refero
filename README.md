@@ -119,7 +119,7 @@ Create `~/.config/ref/config.yaml`:
 
 ```yaml
 fzf-binary: fzf
-fzf-extra-flags: ["--ansi", "--multi", "-i", "--delimiter= :: ", "--preview=ref preview-client --text {5}", "--preview-window=bottom:40%:wrap"]
+fzf-extra-flags: ["--ansi", "--multi", "-i", "--delimiter= :: ", "--preview=ref preview {5}", "--preview-window=bottom:40%:wrap"]
 fzf-extra-bindings: [
   "ctrl-s:jump",
   "ctrl-r:execute(open zotero://select/library/items/{5})",

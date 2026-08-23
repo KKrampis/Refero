@@ -421,6 +421,8 @@ def preview(key: str):
     authors_part = (f"[{author_style}]{creators_str}[/]" if author_style else creators_str)
     line = f"{normalized_item.year} • {venue_part} • {authors_part} • {tags_str} • {title_part}"
     rich_console.print(line, markup=True)
+    if normalized_item.abstract:
+        rich_console.print(normalized_item.abstract, markup=False)
 
 
 COMMANDS = (
