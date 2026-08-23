@@ -150,6 +150,8 @@ def _fallback_render_text(key: str) -> None:
             normalized.journalAbbreviation or normalized.publication or normalized.itemType
         )
         line = f"{normalized.year} • {which} • {creators_str} • {tags_str} • {normalized.title}"
+        if normalized.abstract:
+            line += f"\n{normalized.abstract}"
         print(line)
     except Exception as exc:  # noqa: BLE001
         print(str(exc) or "preview failed")
