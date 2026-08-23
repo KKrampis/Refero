@@ -24,6 +24,21 @@ A smarter, lighter scholarly workflow for Zotero — right from your terminal.
 
 </div>
 
+> **Fork note — attachment-indicator patch** (`hide-attachment-rows` branch)
+>
+> This fork patches `ref pick` so that PDF/snapshot attachment rows are hidden from the
+> interactive picker, and a 📎 column appears next to papers that have at least one attachment.
+>
+> To activate the 📎 column, open `~/.config/ref/config.yaml` and replace the
+> `fzf-header-format` line with:
+>
+> ```yaml
+> fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
+> ```
+>
+> The only change from the upstream default is the leading `{doc[attach]}` token and a
+> title width trimmed from 70 to 68 to compensate. No other settings need to change.
+
 ### Overview
 
 - TUI/CLI client of [Zotero](https://www.zotero.org/).
@@ -119,7 +134,7 @@ fzf-extra-bindings: [
   # macOS defaults to pbcopy; Linux uses xclip -selection clipboard automatically
   "alt-y:execute-silent(echo -n {5} | pbcopy)+abort"
 ]
-fzf-header-format: "{doc[title]:<70.70} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
+fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
 match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]}"
 # Default note editor mode: text | markdown
 note_editor: markdown
