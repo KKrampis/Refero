@@ -261,6 +261,8 @@ def pick(
 
     normalized: list[dict[str, Any]] = []
     for normalized_item in normalized_items:
+        if normalized_item.itemType in ("attachment", "note"):
+            continue  # hide child attachment/note rows from the picker
         doc: dict[str, Any] = {
             "key": normalized_item.key,
             "citekey": normalized_item.citekey,
@@ -268,6 +270,7 @@ def pick(
             "author": "; ".join(normalized_item.creators),
             "year": normalized_item.year,
             "tags": list(normalized_item.tags),
+            "attach": "📎" if normalized_item.numChildren else "  ",
         }
         if group_by_collection:
             display = build_item_collection_display(
