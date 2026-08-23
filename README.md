@@ -140,6 +140,8 @@ fzf-extra-bindings: [
 ]
 fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
 match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
+# PDF viewer used by ctrl-p in ref pick (omit or set to null to use system default)
+# pdf-viewer: zathura
 # Default note editor mode: text | markdown
 note_editor: markdown
 # Diff display style for concurrent edits: table | inline | pairwise

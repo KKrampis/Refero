@@ -75,6 +75,7 @@ class RefConfig:
     fzf_preview_window: Optional[str]
     picker_bindings: List[PickerBinding]
     zotero_unknown_keys: List[str]
+    pdf_viewer: Optional[str]
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "RefConfig":
@@ -91,6 +92,7 @@ class RefConfig:
         color_scheme = str(data.get("color_scheme") or "calm").strip()
         color_schemes = _normalize_color_schemes(data.get("color_schemes"))
         fzf_preview_window = _clean_optional_string(data.get("fzf-preview-window"))
+        pdf_viewer = _clean_optional_string(data.get("pdf-viewer"))
         fzf_flags = list(_coerce_flags(data.get("fzf-extra-flags")))
         raw_zotero = data.get("zotero")
         if isinstance(raw_zotero, Mapping):
@@ -125,6 +127,7 @@ class RefConfig:
             fzf_preview_window=fzf_preview_window,
             picker_bindings=bindings,
             zotero_unknown_keys=unknown_zotero,
+            pdf_viewer=pdf_viewer,
         )
 
     def picker_help_lines(self) -> List[str]:

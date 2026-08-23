@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 from typing import NamedTuple
@@ -151,6 +152,8 @@ def open(
     html_candidate, html_url = _find_html_targets(key, item_data, children)
     item_url = _resolve_item_url(item_data)
 
+    pdf_viewer = cfg.pdf_viewer  # e.g. "zathura", None → system default
+
     def _open_path(path: str) -> None:
         if not system_open_path(path):
             typer.echo(path)
@@ -163,7 +166,13 @@ def open(
             return False
         pdf_path = _resolve_candidate_path(storage_dir, pdf_candidate)
         if pdf_path and pdf_path.exists():
-            _open_path(str(pdf_path))
+            if pdf_viewer:
+                # Use configured viewer non-blocking so the caller (fzf) is not frozen
+                subprocess.Popen([pdf_viewer, str(pdf_path)],
+                                 stdout=subprocess.DEVNULL,
+                                 stderr=subprocess.DEVNULL)
+            else:
+                _open_path(str(pdf_path))
             return True
         if strict:
             message_path = str(pdf_path) if pdf_path else "unknown"

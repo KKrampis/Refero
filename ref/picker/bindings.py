@@ -95,6 +95,7 @@ DEFAULT_PICKER_BINDINGS: Sequence[PickerBindingSpec] = (
         "Open in Zotero",
     ),
     PickerBindingSpec("ctrl-o", "execute(ref open {5})", "Open attachment"),
+    PickerBindingSpec("ctrl-p", "execute(ref open {5} --pdf)", "Open PDF (configured viewer)"),
     PickerBindingSpec("ctrl-e", "execute(ref picker-edit {5})", "Edit metadata"),
     PickerBindingSpec("ctrl-t", "execute(ref label {+5} --pick)", "Edit tags+collections"),
     PickerBindingSpec("ctrl-l", "execute(ref relate {5} --pick)", "Relate items"),
