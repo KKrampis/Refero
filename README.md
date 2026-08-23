@@ -33,6 +33,13 @@ A smarter, lighter scholarly workflow for Zotero — right from your terminal.
 > 2. **Attachment indicator** — a 📎 column marks papers that have at least one child attachment.
 > 3. **Abstract in preview** — the abstract is now included in the fzf preview pane and is
 >    searchable via the match format (type any abstract keyword to filter results).
+> 4. **Open PDF with a custom viewer** — `ctrl-p` in the picker opens the item's PDF without
+>    exiting. Set your viewer in `~/.config/ref/config.yaml`:
+>    ```yaml
+>    pdf-viewer: zathura
+>    ```
+>    Omit the key (or set it to `null`) to fall back to the system default (`open` on macOS,
+>    `xdg-open` on Linux).
 >
 > If you have an existing `~/.config/ref/config.yaml`, update these two lines to match:
 >
