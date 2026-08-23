@@ -110,6 +110,11 @@ DEFAULT_PICKER_BINDINGS: Sequence[PickerBindingSpec] = (
         f"execute-silent(echo -n {{5}} | {_CLIP_CMD})+abort",
         "Copy key",
     ),
+    PickerBindingSpec(
+        "ctrl-f",
+        "change-preview-window(full:wrap|bottom:40%:wrap)",
+        "Toggle full abstract",
+    ),
 )
 
 
