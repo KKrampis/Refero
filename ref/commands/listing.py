@@ -270,7 +270,7 @@ def pick(
             "author": "; ".join(normalized_item.creators),
             "year": normalized_item.year,
             "tags": list(normalized_item.tags),
-            "attach": "📎" if normalized_item.numChildren else "  ",
+            "attach": "[PDF]" if normalized_item.numChildren else "     ",
             "abstract": normalized_item.abstract,
         }
         if group_by_collection:

@@ -44,7 +44,7 @@ A smarter, lighter scholarly workflow for Zotero — right from your terminal.
 > If you have an existing `~/.config/ref/config.yaml`, update these two lines to match:
 >
 > ```yaml
-> fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
+> fzf-header-format: "{doc[attach]} {doc[title]:<64.64} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
 > match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
 > ```
 >
@@ -145,7 +145,7 @@ fzf-extra-bindings: [
   # macOS defaults to pbcopy; Linux uses xclip -selection clipboard automatically
   "alt-y:execute-silent(echo -n {5} | pbcopy)+abort"
 ]
-fzf-header-format: "{doc[attach]} {doc[title]:<68.68} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
+fzf-header-format: "{doc[attach]} {doc[title]:<64.64} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
 match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
 # PDF viewer used by ctrl-p in ref pick (omit or set to null to use system default)
 # pdf-viewer: zathura
