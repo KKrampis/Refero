@@ -216,10 +216,11 @@ def _coerce_flags(value: Any) -> List[str]:
     return [str(value)]
 
 
-def _apply_style(cfg: Dict[str, Any]) -> None:
+def _apply_style(cfg: Dict[str, Any], user_keys: set | None = None) -> None:
     style = (cfg.get("fzf-style") or "").strip().lower()
     if not style:
         return
+    user_keys = user_keys or set()
 
     aligned_header = (
         "{doc[title]:<70.70} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
@@ -258,34 +259,36 @@ def _apply_style(cfg: Dict[str, Any]) -> None:
 
     ensure_flag_pair("--delimiter", " :: ")
 
+    def set_if_not_user(key: str, value: object) -> None:
+        """Set cfg[key] only when the user has not explicitly set it."""
+        if key not in user_keys:
+            cfg[key] = value
+
     if style == "aligned":
-        cfg["fzf-header-format"] = aligned_header
-        cfg["match-format"] = default_match
+        set_if_not_user("fzf-header-format", aligned_header)
+        set_if_not_user("match-format", default_match)
         ensure_flag("--ansi")
     elif style == "compact":
-        cfg["fzf-header-format"] = compact_header
-        cfg["match-format"] = default_match
+        set_if_not_user("fzf-header-format", compact_header)
+        set_if_not_user("match-format", default_match)
         ensure_flag("--ansi")
     elif style == "colored":
-        cfg["fzf-header-format"] = colored_header
-        cfg["match-format"] = default_match
+        set_if_not_user("fzf-header-format", colored_header)
+        set_if_not_user("match-format", default_match)
         ensure_flag("--ansi")
     elif style == "title-preview":
-        cfg["fzf-header-format"] = (
+        set_if_not_user("fzf-header-format",
             "\x1b[1;36m{doc[title]:.120}\x1b[0m :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
         )
-        cfg["match-format"] = default_match
+        set_if_not_user("match-format", default_match)
         ensure_flag("--ansi")
         ensure_flag_pair("--with-nth", "1")
-        # Use the preview client (daemon-backed) but render compact text
-        # to match the original title-preview single-line look.
         ensure_flag_pair("--preview", "ref preview-client --text {5}")
         ensure_flag_pair("--preview-window", "up,1,wrap")
     elif style == "preview":
-        cfg["fzf-header-format"] = aligned_header
-        cfg["match-format"] = default_match
+        set_if_not_user("fzf-header-format", aligned_header)
+        set_if_not_user("match-format", default_match)
         ensure_flag("--ansi")
-        # Use the preview client; it talks to an optional background daemon via FDs.
         ensure_flag_pair("--preview", "ref preview-client {5}")
         ensure_flag_pair("--preview-window", "right,60,border")
     else:
@@ -328,14 +331,14 @@ def _normalize_color_schemes(value: Any) -> Dict[str, Dict[str, str]]:
     return result
 
 
-def _normalize_config(cfg: Dict[str, Any]) -> None:
+def _normalize_config(cfg: Dict[str, Any], user_keys: set | None = None) -> None:
     cfg["fzf-extra-bindings"] = _coerce_bindings(cfg.get("fzf-extra-bindings"))
     cfg["fzf-extra-flags"] = _coerce_flags(cfg.get("fzf-extra-flags"))
     cfg["diff_style"] = str(cfg.get("diff_style", "inline")).strip().lower()
     cfg["note_editor"] = str(cfg.get("note_editor", "markdown")).strip().lower()
     cfg["color_schemes"] = _normalize_color_schemes(cfg.get("color_schemes"))
     try:
-        _apply_style(cfg)
+        _apply_style(cfg, user_keys=user_keys or set())
     except Exception:
         pass
 
@@ -368,6 +371,7 @@ def _ensure_secure_permissions(path: Path) -> None:
 
 def _load_raw_config() -> Dict[str, Any]:
     cfg = deepcopy(DEFAULTS)
+    user_keys: set = set()
 
     path = _config_path()
     if not path.exists():
@@ -393,8 +397,9 @@ def _load_raw_config() -> Dict[str, Any]:
                         cfg["zotero"].update(value)  # type: ignore[index]
                     else:
                         cfg[key] = value
+                    user_keys.add(key)
 
-    _normalize_config(cfg)
+    _normalize_config(cfg, user_keys=user_keys)
     return cfg
 
 
