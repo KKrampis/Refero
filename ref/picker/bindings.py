@@ -112,7 +112,7 @@ DEFAULT_PICKER_BINDINGS: Sequence[PickerBindingSpec] = (
     ),
     PickerBindingSpec(
         "ctrl-f",
-        "change-preview-window(full:wrap|bottom:40%:wrap)",
+        "change-preview-window(99%:wrap|bottom:40%:wrap)",
         "Toggle full abstract",
     ),
 )
