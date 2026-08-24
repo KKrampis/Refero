@@ -96,7 +96,7 @@ DEFAULT_PICKER_BINDINGS: Sequence[PickerBindingSpec] = (
     ),
     PickerBindingSpec("ctrl-o", "execute(ref open {5})", "Open attachment"),
     PickerBindingSpec("ctrl-p", "execute(ref open {5} --pdf)", "Open PDF (configured viewer)"),
-    PickerBindingSpec("ctrl-b", "execute(REF_PDF_VIEWER=chromium ref open {5} --pdf)", "Open PDF in Chromium"),
+    PickerBindingSpec("ctrl-b", "execute(REF_PDF_VIEWER=electron-browser-shell ref open {5} --pdf)", "Open PDF in electron-browser-shell"),
     PickerBindingSpec("ctrl-e", "execute(ref picker-edit {5})", "Edit metadata"),
     PickerBindingSpec("ctrl-t", "execute(ref label {+5} --pick)", "Edit tags+collections"),
     PickerBindingSpec("ctrl-l", "execute(ref relate {5} --pick)", "Relate items"),
