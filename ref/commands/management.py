@@ -5,6 +5,8 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
+import textwrap
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 from typing import NamedTuple
@@ -720,6 +722,38 @@ def delete(
     )
 
 
+def _reflow_pdf_text(text: str, width: int = 80) -> str:
+    """Reflow pdftotext output so prose fills terminal width.
+
+    pdftotext preserves the PDF's hard line breaks, leaving lines at
+    the column width of the original layout (~60-70 chars for two-column
+    academic papers). This joins lines within each paragraph and reflows
+    them to the given terminal width, while preserving blank lines
+    (paragraph / section breaks) and indented lines (lists, code, tables).
+    """
+    out: list[str] = []
+    para: list[str] = []
+
+    def flush() -> None:
+        if para:
+            out.append(textwrap.fill(" ".join(para), width=width))
+            para.clear()
+
+    for line in text.splitlines():
+        if not line.strip():
+            flush()
+            out.append("")
+        elif line[0] in (" ", "\t"):
+            # Indented line — preserve as-is (lists, tables, code)
+            flush()
+            out.append(line)
+        else:
+            para.append(line.strip())
+
+    flush()
+    return "\n".join(out) + "\n"
+
+
 def pdf_read(key: str) -> None:
     """Extract PDF text to stdout for reading in a pager (ref pdf-read KEY | less)."""
 
@@ -750,9 +784,18 @@ def pdf_read(key: str) -> None:
         )
         raise typer.Exit(code=1)
 
-    result = subprocess.run([pdftotext_bin, str(pdf_path), "-"])
+    result = subprocess.run(
+        [pdftotext_bin, str(pdf_path), "-"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     if result.returncode != 0:
+        sys.stdout.buffer.write(result.stderr)
         raise typer.Exit(code=result.returncode)
+
+    width = shutil.get_terminal_size(fallback=(80, 24)).columns
+    text = result.stdout.decode("utf-8", errors="replace")
+    sys.stdout.write(_reflow_pdf_text(text, width))
 
 
 COMMANDS = (
