@@ -117,6 +117,11 @@ DEFAULT_PICKER_BINDINGS: Sequence[PickerBindingSpec] = (
         "change-preview-window(99%:wrap|bottom:40%:wrap)",
         "Toggle full abstract",
     ),
+    PickerBindingSpec(
+        "ctrl-x",
+        "execute(ref pdf-read {5} 2>&1 | less)",
+        "Read PDF as text",
+    ),
 )
 
 

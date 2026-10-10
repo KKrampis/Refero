@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import shutil
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
@@ -33,7 +34,7 @@ from ._registry import CommandBinding
 from ..utils.search import EXPORT_FILTER_OPTIONS, build_search_filters
 from ..utils.query import coalesce_query
 
-__all__ = ["open", "export", "set_cmd", "add", "delete", "COMMANDS"]
+__all__ = ["open", "export", "set_cmd", "add", "delete", "pdf_read", "COMMANDS"]
 
 
 logger = logging.getLogger(__name__)
@@ -719,10 +720,46 @@ def delete(
     )
 
 
+def pdf_read(key: str) -> None:
+    """Extract PDF text to stdout for reading in a pager (ref pdf-read KEY | less)."""
+
+    zot = zot_from_config()
+    cfg = load_config()
+    storage_dir = cfg.zotero.storage_dir
+
+    item = zot.get_item(key)
+    item_data = item.get("data", {})
+    children = zot.children(key)
+
+    pdf_candidate = _find_pdf_candidate(key, item_data, children)
+    if not pdf_candidate:
+        typer.echo("No PDF attachment found for this item", err=True)
+        raise typer.Exit(code=1)
+
+    pdf_path = _resolve_candidate_path(storage_dir, pdf_candidate)
+    if not pdf_path or not pdf_path.exists():
+        path_str = str(pdf_path) if pdf_path else "unknown"
+        typer.echo(f"PDF file not found in Zotero storage: {path_str}", err=True)
+        raise typer.Exit(code=1)
+
+    pdftotext_bin = shutil.which("pdftotext")
+    if not pdftotext_bin:
+        typer.echo(
+            "pdftotext not found — install poppler: brew install poppler",
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+    result = subprocess.run([pdftotext_bin, str(pdf_path), "-"])
+    if result.returncode != 0:
+        raise typer.Exit(code=result.returncode)
+
+
 COMMANDS = (
     CommandBinding(callback=open, name="open"),
     CommandBinding(callback=export, name="export"),
     CommandBinding(callback=set_cmd, name="set"),
     CommandBinding(callback=add, name="add"),
     CommandBinding(callback=delete, name="delete"),
+    CommandBinding(callback=pdf_read, name="pdf-read"),
 )

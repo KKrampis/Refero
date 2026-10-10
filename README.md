@@ -40,15 +40,23 @@ A smarter, lighter scholarly workflow for Zotero — right from your terminal.
 >    ```
 >    Omit the key (or set it to `null`) to fall back to the system default (`open` on macOS,
 >    `xdg-open` on Linux).
+> 5. **Read PDF as text in the TUI** — `ctrl-x` in the picker extracts the PDF text via
+>    `pdftotext` and opens it in `less` without leaving the picker. Requires
+>    `poppler` (`brew install poppler`). Press `q` to return to the picker.
 >
-> If you have an existing `~/.config/ref/config.yaml`, update these two lines to match:
+> If you have an existing `~/.config/ref/config.yaml`, update these two lines to match and add
+> `ctrl-x` to your `fzf-extra-bindings` list:
 >
 > ```yaml
 > fzf-header-format: "{doc[attach]} {doc[title]:<64.64} :: {doc[author]} :: «{doc[year]}» :: :{doc[tags]} :: {doc[key]} :: {doc[citekey]}"
 > match-format: "{doc[title]} :: {doc[author]} :: {doc[year]} :: :{doc[tags]} :: {doc[abstract]}"
 > ```
+> and add to `fzf-extra-bindings`:
+> ```yaml
+>   "ctrl-x:execute(ref pdf-read {5} 2>&1 | less)"
+> ```
 >
-> A fresh install picks up these defaults automatically — no manual yaml edit needed.
+> A fresh install picks up the header/match defaults automatically — no manual yaml edit needed.
 
 ### Overview
 
